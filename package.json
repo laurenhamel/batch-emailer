@@ -1,0 +1,21 @@
+{
+  "name": "batch-emailer",
+  "version": "1.0.0",
+  "description": "Send out batch emails using HTML templates and JSON data",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laurenhamel/batch-emailer.git"
+  },
+  "keywords": [
+    "php",
+    "email"
+  ],
+  "author": "Lauren Hamel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/laurenhamel/batch-emailer/issues"
+  },
+  "homepage": "https://github.com/laurenhamel/batch-emailer#readme"
+}
