@@ -1,0 +1,61 @@
+{
+  "paths": {
+    "root": "/",
+    "data": {
+      "root": "data/"
+    },
+    "src": {
+      "root": "src/",
+      "js": "src/js/",
+      "scss": "src/scss/",
+      "php": "src/php/",
+      "fonts": "src/fonts/",
+      "images": "src/images/",
+      "partials": "src/partials/"
+    },
+    "dev": {
+      "root": "dev/",
+      "js": "dev/js/",
+      "css": "dev/css/",
+      "php": "dev/php/",
+      "fonts": "dev/fonts/",
+      "images": "dev/images/",
+      "dependencies": {
+        "css": "dev/css/dependencies/",
+        "js": "dev/js/dependencies/",
+        "php": "dev/php/dependencies/"
+      }
+    },
+    "dist": {
+      "root": "dist/",
+      "js": "dist/js/",
+      "css": "dist/css/",
+      "php": "dist/php/",
+      "fonts": "dist/fonts/",
+      "images": "dist/images/",
+      "dependencies": {
+        "css": "dist/css/dependencies/",
+        "js": "dist/js/dependencies/",
+        "php": "dist/php/dependencies/"
+      }
+    },
+    "composer": {
+      "root": "vendor/"
+    }
+  },
+  "css": [
+    "style.css"
+  ],
+  "js": [
+    "<%= pkg.main %>"
+  ],
+  "dependencies": {
+    "css": [
+    ],
+    "js": [
+      "<%= pkg.dependencies %>"
+    ],
+    "php": [
+    ]
+  }
+}
