@@ -1,0 +1,13 @@
+{
+  "search": {
+    "scope": "project",
+    "excludeFolders": [ 
+      "vendor",
+      "vends",
+      "node_modules", 
+      "dev", 
+      "dist",
+      "dependencies"
+    ]
+  }
+}
