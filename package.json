@@ -1,7 +1,7 @@
 {
   "name": "batch-emailer",
   "version": "1.0.0",
-  "description": "Send out batch emails using HTML templates and JSON data",
+  "description": "A simple PHP batch email interface that uses HTML templates and JSON data",
   "main": "index.js",
   "scripts": {},
   "repository": {
@@ -10,6 +10,8 @@
   },
   "keywords": [
     "php",
+    "html",
+    "json",
     "email"
   ],
   "author": "Lauren Hamel",
