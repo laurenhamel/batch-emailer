@@ -1,0 +1,8 @@
+#{$all-buttons} {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  cursor: pointer;
+  transition: $transition-all;
+}

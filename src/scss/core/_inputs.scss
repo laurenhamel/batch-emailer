@@ -1,0 +1,9 @@
+#inputs {
+  
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas: "template json";
+  grid-gap: 10px;
+  @include padding-x( 10px );
+  
+}

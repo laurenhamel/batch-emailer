@@ -11,7 +11,8 @@
       "php": "src/php/",
       "fonts": "src/fonts/",
       "images": "src/images/",
-      "partials": "src/partials/"
+      "partials": "src/partials/",
+      "includes": "src/includes/"
     },
     "dev": {
       "root": "dev/",
@@ -20,6 +21,7 @@
       "php": "dev/php/",
       "fonts": "dev/fonts/",
       "images": "dev/images/",
+      "includes": "dev/includes/",
       "dependencies": {
         "css": "dev/css/dependencies/",
         "js": "dev/js/dependencies/",
@@ -33,6 +35,7 @@
       "php": "dist/php/",
       "fonts": "dist/fonts/",
       "images": "dist/images/",
+      "includes": "dist/includes/",
       "dependencies": {
         "css": "dist/css/dependencies/",
         "js": "dist/js/dependencies/",
@@ -51,11 +54,16 @@
   ],
   "dependencies": {
     "css": [
+      "codemirror"
     ],
     "js": [
-      "<%= pkg.dependencies %>"
+      "<%= pkg.dependencies %>",
+      "codemirror/addon/overlay.js"
     ],
     "php": [
+      "phpmailer/phpmailer",
+      "mustache/mustache",
+      "vlucas/phpdotenv"
     ]
   }
 }

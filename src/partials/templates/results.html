@@ -1,0 +1,31 @@
+<template id="template-results">
+
+  <section id="results" v-if="results.length > 0">
+  
+    <div class="feedback sent">
+      <strong class="title">Sent</strong>
+      <span class="metric">{{sent}}</span>
+    </div>
+    
+    <div class="feedback failed">
+      <strong class="title">Failed</strong>
+      <span class="metric">{{failed}}</span>
+    </div>
+    
+    <div class="feedback total">
+      <strong class="title">Total</strong>
+      <span class="metric">{{sent + failed}}</span>
+    </div>
+    
+    <div class="results">
+      <ul v-if="sentTo" class="result sentto">
+        <li v-for="sent in sentTo()">{{sent}}</li>
+      </ul>
+      <ul v-if="failedTo" class="result failedto">
+        <li v-for="failed in failedTo()">{{failed}}</li>
+      </ul>
+    </div>
+  
+  </section>
+
+</template>

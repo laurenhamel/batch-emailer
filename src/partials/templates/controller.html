@@ -1,0 +1,17 @@
+<template id="template-controller">
+
+  <section id="controller">
+  
+    <div class="select">
+      <select v-model="action">
+        <option v-for="action in actions" :value="action">
+          {{action | titlecase}}
+        </option>
+      </select>
+    </div>
+    
+    <button class="button" @click="process">Go</button>
+    
+  </section>
+
+</template>

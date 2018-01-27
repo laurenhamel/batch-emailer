@@ -68,15 +68,26 @@ module.exports = function( grunt ) {
         tasks: ['sass:dev', 'postcss:dev']
       },
       php: {
-        files: [path.resolve(PATHS.src.php, '**/*.php')],
-        tasks: ['copy:dev']
+        files: [
+          path.resolve(PATHS.src.php, '**/*.php'),
+          path.resolve(PATHS.src.root, '*.php'),
+          path.resolve(PATHS.src.includes, '**/*.php')
+        ],
+        tasks: ['includes:dev', 'replace:dev', 'copy:dev']
       },
       html: {
-        files: [path.resolve(PATHS.src.root, '*.html'), path.resolve(PATHS.src.partials, '**/*.html')],
+        files: [
+          path.resolve(PATHS.src.root, '*.html'), 
+          path.resolve(PATHS.src.partials, '**/*.html'),
+          path.resolve(PATHS.src.includes, '**/*.html')
+        ],
         tasks: ['includes:dev', 'replace:dev']
       },
       assets: {
-        files: [path.resolve(PATHS.src.images, '**/*'), path.resolve(PATHS.src.fonts, '**/*')],
+        files: [
+          path.resolve(PATHS.src.images, '**/*'), 
+          path.resolve(PATHS.src.fonts, '**/*')
+        ],
         tasks: ['copy:dev']
       },
       config: {
@@ -106,7 +117,8 @@ module.exports = function( grunt ) {
           css: true,
           include: {
             js: {
-              'codemirror/mode/**/*.js': 'codemirror/'
+              'codemirror/mode/**/*.js': 'codemirror/mode/',
+              'codemirror/addon/**/*.js': 'codemirror/addon/'
             }
           }
         },
@@ -122,7 +134,8 @@ module.exports = function( grunt ) {
           css: true,
           include: {
             js: {
-              'codemirror/mode/**/*.js': 'codemirror/'
+              'codemirror/mode/**/*.js': 'codemirror/mode/',
+              'codemirror/addon/**/*.js': 'codemirror/addon/'
             }
           }
         },
@@ -144,6 +157,24 @@ module.exports = function( grunt ) {
             cwd: path.resolve(PATHS.src.root),
             src: ['*.html'],
             dest: path.resolve(PATHS.dev.root)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.root),
+            src: ['*.php'],
+            dest: path.resolve(PATHS.dev.root)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.includes),
+            src: ['*.html'],
+            dest: path.resolve(PATHS.dev.includes)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.includes),
+            src: ['*.php'],
+            dest: path.resolve(PATHS.dev.includes)
           }
         ]
       },
@@ -157,6 +188,24 @@ module.exports = function( grunt ) {
             cwd: path.resolve(PATHS.src.root),
             src: ['*.html'],
             dest: path.resolve(PATHS.dist.root)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.root),
+            src: ['*.php'],
+            dest: path.resolve(PATHS.dist.root)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.includes),
+            src: ['*.html'],
+            dest: path.resolve(PATHS.dist.includes)
+          },
+          {
+            expand: true,
+            cwd: path.resolve(PATHS.src.includes),
+            src: ['*.php'],
+            dest: path.resolve(PATHS.dist.includes)
           }
         ]
       }
@@ -213,6 +262,24 @@ module.exports = function( grunt ) {
             flatten: true,
             src: [path.resolve(PATHS.dev.root, '*.html')],
             dest: path.resolve(PATHS.dev.root)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dev.root, '*.php')],
+            dest: path.resolve(PATHS.dev.root)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dev.includes, '*.html')],
+            dest: path.resolve(PATHS.dev.includes)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dev.includes, '*.php')],
+            dest: path.resolve(PATHS.dev.includes)
           }
         ]
       },
@@ -267,6 +334,24 @@ module.exports = function( grunt ) {
             flatten: true,
             src: [path.resolve(PATHS.dist.root, '*.html')],
             dest: path.resolve(PATHS.dist.root)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dist.root, '*.php')],
+            dest: path.resolve(PATHS.dist.root)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dist.includes, '*.html')],
+            dest: path.resolve(PATHS.dist.includes)
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [path.resolve(PATHS.dist.includes, '*.php')],
+            dest: path.resolve(PATHS.dist.includes)
           }
         ]
       },
@@ -297,6 +382,13 @@ module.exports = function( grunt ) {
             cwd: PATHS.data.root,
             src: ['**/*'],
             dest: PATHS.dev.root,
+            dot: true
+          },
+          {
+            expand: true,
+            cwd: PATHS.src.includes,
+            src: ['**/*'],
+            dest: PATHS.dev.includes,
             dot: true
           }, 
           {
@@ -332,6 +424,13 @@ module.exports = function( grunt ) {
             cwd: PATHS.data.root,
             src: ['**/*'],
             dest: PATHS.dist.root,
+            dot: true
+          },
+          {
+            expand: true,
+            cwd: PATHS.src.includes,
+            src: ['**/*'],
+            dest: PATHS.dist.includes,
             dot: true
           },
           {

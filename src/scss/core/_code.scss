@@ -1,0 +1,108 @@
+.CodeMirror {
+  
+  .CodeMirror-gutter { width: 40px; }
+  .CodeMirror-linenumber { width: 40px !important; box-sizing: border-box; padding-right: 10px; }
+  
+  &.cm-s-dark {
+    background-color: color('code', 'dark', 'background');
+    color: color('code', 'dark', 'default');
+    
+    .CodeMirror-gutters { 
+      background-color: color('code', 'dark', 'background');
+      color: color('code', 'dark', 'default');
+      border-right: 0;
+    }
+    
+    .CodeMirror-cursor { border-color: color-contrast(color('code', 'dark', 'background')) }
+
+    .cm-quote { font-style: italic; }
+    .cm-header, .cm-strong { font-weight: bold; }
+    .cm-em { font-style: italic; }
+    .cm-link { text-decoration: underline; }
+    .cm-strikethrough { text-decoration: line-through; }
+    .cm-keyword { font-weight: normal; }
+    .cm-variable, .cm-punctuation {}
+    .cm-comment { font-style: italic; }
+
+    .cm-keyword { color: color('code', 'dark', 'keyword'); }
+    .cm-atom { color: color('code', 'dark', 'atom'); }
+    .cm-number { color: color('code', 'dark', 'number'); }
+    .cm-def { color: color('code', 'dark', 'def'); }
+    .cm-variable { color: color('code', 'dark', 'variable'); }
+    .cm-variable-2 { color: color('code', 'dark', 'variable-2'); }
+    .cm-variable-3 { color: color('code', 'dark', 'variable-3'); }
+    .cm-operator { color: color('code', 'dark', 'operator'); }
+    .cm-comment { color: color('code', 'dark', 'comment'); }
+    .cm-string { color: color('code', 'dark', 'string'); }
+    .cm-string-2 { color: color('code', 'dark', 'string-2'); }
+    .cm-meta { color: color('code', 'dark', 'meta'); }
+    .cm-qualifier { color: color('code', 'dark', 'qualifier'); }
+    .cm-builtin { color: color('code', 'dark', 'builtin'); }
+    .cm-bracket { color: color('code', 'dark', 'bracket'); }
+    .cm-tag { color: color('code', 'dark', 'tag'); }
+    .cm-attribute { color: color('code', 'dark', 'attribute'); }
+    .cm-header { color: color('code', 'dark', 'header'); }
+    .cm-quote { color: color('code', 'dark', 'quote'); }
+    .cm-hr { color: color('code', 'dark', 'hr'); }
+    .cm-link { color: color('code', 'dark', 'link'); }
+    .cm-rangeinfo { color: color('code', 'dark', 'rangeinfo'); }
+    .cm-minus { color: color('code', 'dark', 'minus'); }
+    .cm-plus { color: color('code', 'dark', 'plus'); }
+    .cm-property { color: color('code', 'dark', 'property'); }
+    .cm-error { color: color('code', 'dark', 'error'); }
+    .cm-mustache { color: color('code', 'dark', 'def'); }
+
+  }
+
+  &.cm-s-light {
+    background-color: color('code', 'light', 'background');
+    color: color('code', 'light', 'default');
+    
+    .CodeMirror-gutters { 
+      background-color: color('code', 'light', 'background');
+      color: color('code', 'light', 'default');
+      border-right: 0;
+    }
+    
+    .CodeMirror-cursor { border-color: color-contrast(color('code', 'light', 'background')) }
+
+    .cm-quote { font-style: italic; }
+    .cm-header, .cm-strong { font-weight: bold; }
+    .cm-em { font-style: italic; }
+    .cm-link { text-decoration: underline; }
+    .cm-strikethrough { text-decoration: line-through; }
+    .cm-keyword { font-weight: normal; }
+    .cm-variable, .cm-punctuation {}
+    .cm-comment { font-style: italic; }
+
+    .cm-keyword { color: color('code', 'light', 'keyword'); }
+    .cm-atom { color: color('code', 'light', 'atom'); }
+    .cm-number { color: color('code', 'light', 'number'); }
+    .cm-def { color: color('code', 'light', 'def'); }
+    .cm-variable { color: color('code', 'light', 'variable'); }
+    .cm-variable-2 { color: color('code', 'light', 'variable-2'); }
+    .cm-variable-3 { color: color('code', 'light', 'variable-3'); }
+    .cm-operator { color: color('code', 'light', 'operator'); }
+    .cm-comment { color: color('code', 'light', 'comment'); }
+    .cm-string { color: color('code', 'light', 'string'); }
+    .cm-string-2 { color: color('code', 'light', 'string-2'); }
+    .cm-meta { color: color('code', 'light', 'meta'); }
+    .cm-qualifier { color: color('code', 'light', 'qualifier'); }
+    .cm-builtin { color: color('code', 'light', 'builtin'); }
+    .cm-bracket { color: color('code', 'light', 'bracket'); }
+    .cm-tag { color: color('code', 'light', 'tag'); }
+    .cm-attribute { color: color('code', 'light', 'attribute'); }
+    .cm-header { color: color('code', 'light', 'header'); }
+    .cm-quote { color: color('code', 'light', 'quote'); }
+    .cm-hr { color: color('code', 'light', 'hr'); }
+    .cm-link { color: color('code', 'light', 'link'); }
+    .cm-rangeinfo { color: color('code', 'light', 'rangeinfo'); }
+    .cm-minus { color: color('code', 'light', 'minus'); }
+    .cm-plus { color: color('code', 'light', 'plus'); }
+    .cm-property { color: color('code', 'light', 'property'); }
+    .cm-error { color: color('code', 'light', 'error'); }
+    .cm-mustache { color: color('code', 'light', 'def'); }
+
+  }
+  
+}

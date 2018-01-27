@@ -1,0 +1,70 @@
+#results {
+  
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 110px 55px 55px 110px 1fr;
+  grid-template-areas: ". sent failed failed total ."
+                       "results results results results results results";
+  grid-gap: 10px;
+  justify-content: center;
+  
+  $border: 1px solid black;
+  
+  .feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: whitesmoke;
+    border: $border;
+    padding: 10px;
+    
+    .title { 
+      text-transform: uppercase; 
+      font-size: .8em; 
+      opacity: .5;
+      margin-bottom: 10px;
+    }
+    
+    .metric { font-size: 1.5em; }
+    
+    &.sent { grid-column: sent; grid-row: sent; }
+    &.failed { grid-column: failed; grid-row: failed; }
+    &.total { grid-column: total; grid-row: total; }
+    
+  }
+  
+  .results {
+    grid-column: results;
+    grid-row: results;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    grid-gap: 10px;
+    
+    .result {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      border: $border;
+      padding: 10px;
+      
+      li {
+        padding: 5px;
+        font-size: .7em;
+        text-transform: uppercase;
+        
+        + li { margin-top: 5px; }
+        
+      }
+      
+      &.sentto { background-color: rgba(darkgreen, .1); }
+      &.failedto { background-color: rgba(darkred, .1); }
+      
+    }
+    
+  }
+  
+}

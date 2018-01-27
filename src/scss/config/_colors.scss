@@ -1,0 +1,68 @@
+$colors: (
+  
+  'code': (
+    'dark': (
+      'background': #1b1d1e,
+      'default': #dddddd,
+      'keyword': #6c9ef8,
+      'atom': #d89333,
+      'number': #85a300,
+      'def': #b77fdb,
+      'variable': #dddddd,
+      'variable-2': #dddddd,
+      'variable-3': #dddddd,
+      'property': #b77fdb,
+      'operator': #dddddd,
+      'comment': #767676,
+      'string': #d89333,
+      'string-2': #d89333,
+      'meta': #dddddd,
+      'error': #dc322f,
+      'qualifier': #6c9ef8,
+      'builtin': #6c9ef8,
+      'bracket': #dddddd,
+      'tag': #6c9ef8,
+      'attribute': #85a300,
+      'header': #d85896,
+      'quote': #6c9ef8,
+      'hr': #d89333,
+      'link': #b77fdb,
+      'rangeinfo': #6c71c4,
+      'minus': #dc322f,
+      'plus': #85a300
+    ),
+    'light': (
+      'background': #f7f7f7,
+      'default': #535353,
+      'keyword': #446fbd,
+      'atom': #e88501,
+      'number': #6d8600,
+      'def': #8757ad,
+      'variable': #535353,
+      'variable-2': #535353,
+      'variable-3': #535353,
+      'property': #8757ad,
+      'operator': #535353,
+      'comment': #949494,
+      'string': #e88501,
+      'string-2': #e88501,
+      'meta': #535353,
+      'error': #dc322f,
+      'qualifier': #446fbd,
+      'builtin': #446fbd,
+      'bracket': #222,
+      'tag': #446fbd,
+      'attribute': #6d8600,
+      'header': #d33682,
+      'quote': #446fbd,
+      'hr': #e88501,
+      'link': #8757ad,
+      'rangeinfo': #6c71c4,
+      'minus': #dc322f,
+      'plus': #859900
+    )
+  )
+  
+);
+
+$brandy-colors-map: $colors;

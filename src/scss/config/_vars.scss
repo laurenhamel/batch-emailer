@@ -1,0 +1,7 @@
+$all-buttons: join($all-buttons, selector(
+  '.button'
+));
+
+$transition-speed: .25s;
+$transition-timing: ease;
+$transition-all: all $transition-speed $transition-timing;

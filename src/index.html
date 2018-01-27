@@ -1,0 +1,58 @@
+<html>
+<head>
+  
+  <title></title>
+  
+  @@css
+  @@dependencies:css
+  
+</head>
+<body>
+  
+  <main id="app">
+    
+    <h1>Batch Emailer</h1>
+    
+    <div id="inputs">
+      
+      <section id="template">
+        
+        <h3>Template</h3>
+        
+        <coder lang="html" bind="template"></coder>
+        
+      </section>
+      
+      <section id="data">
+        
+        <h3>Data</h3>
+      
+        <coder lang="json" bind="data"></coder>
+        
+      </section>
+      
+    </div>
+    
+    <div id="controls">
+  
+      <controller></controller>
+      
+    </div>
+    
+    <div id="outputs">
+    
+      <results></results>
+      <previewer></previewer>
+    
+    </div>
+    
+  </main>
+  
+  include "templates.html"
+  
+  @@dependencies:js
+  @@js
+  @@livereload
+  
+</body>
+</html>

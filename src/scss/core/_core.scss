@@ -1,0 +1,12 @@
+@include normalize();
+
+body { font-family: sans-serif; }
+
+#{$all-inputs} { -webkit-appearance: none; }
+
+#{$all-headings} { margin-bottom: 10px; }
+
+* { position: relative; box-sizing: border-box; outline: 0; }
+
+h1, h2 { text-align: center; }
+h3, h4 { text-align: left; }
