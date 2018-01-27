@@ -33,15 +33,15 @@ To get started, follow the steps below:
 
 4. Run `grunt` or `grunt dev` to make customizations to the project.
 
-5. Alternatively, run `grunt dist` to generate production-ready files ready for deployment.
+5. Alternatively, run `grunt dist` to generate production-ready files for deployment.
 
 ## Using the Interface
 
-The interface is intended to be simple and intuitive. To use the Batch Emailer, first insert the markup for an HTML email template into the *Template* input field. This email template can optionally be marked up using the Mustache templating language to personalize your emails for each contact. Next, insert some JSON contact data into the *Data* input field. See the [Data Format](#data-format) section for more details on how to format your contact data for proper rendering and sending. Use the provided dropdown menu to choose from several rendering options: preview, test, or email. Click **Go** and let Batch Emailer do the rest of the work for you. If using the *preview* option, a frame will be rendered, which allows you to look at the merged email template and data in the same browser window. If using the *test* option, your test emails will be sent to the email address you specified in your `.env` file and results of the test will be displayed in the browser window. If using the *email* option, your template and data will be merged and blasted to all contacts listed in your JSON and the results of the batch email process will be displayed in the browser window.
+The interface is intended to be simple and intuitive. To use the Batch Emailer, first insert the markup for an HTML email template into the *Template* input field. This email template can optionally be marked up using the Mustache templating language to personalize your emails for each contact. Next, insert some JSON contact data into the *Data* input field. See the [Data Format](#data-format) section for more details on how to format your contact data for proper rendering and sending. Use the provided dropdown menu to choose from several rendering options: preview, test, or email. Click **Go** and let the Batch Emailer do the rest of the work for you. If using the **preview** option, a frame will be rendered, which allows you to look at the merged email template and data in the same browser window. If using the **test** option, your test emails will be sent to the email address you specified in your `.env` file and results of the test will be displayed in the browser window. If using the **email** option, your template and data will be merged and blasted to all contacts listed in your JSON and the results of the batch email process will be displayed in the browser window.
 
 ## Data Format
 
-In order to send out batch emails, your JSON data must include an array of individual contact data. Furthermore, for each contact, a `to` and `from` key is required and a `subject` key is recommended. These parameters will be reflected in email's respective fields. Additionally, the `to` and `from` values can be declared in a number of ways:
+In order to send out batch emails, your JSON data must include an array of individual contact data. Furthermore, for each contact, a `to` and `from` key is required and a `subject` key is recommended. These parameters will be reflected in the email's respective fields. Additionally, the `to` and `from` values can be declared in a number of ways:
 
 ### For the `from` parameter:
 
@@ -54,7 +54,7 @@ In order to send out batch emails, your JSON data must include an array of indiv
 ]
 ```
 
-**An object with `email` and `name`(optional) keys can be used:**
+**Alternatively, an object with `email` and `name`(optional) keys can be used:**
 ```json
 [
   {
@@ -77,7 +77,7 @@ In order to send out batch emails, your JSON data must include an array of indiv
 ]
 ```
 
-**An object with `email` and `name`(optional) keys can be used:**
+**Or an object with `email` and `name`(optional) keys can be used:**
 ```json
 [
   {
@@ -89,7 +89,7 @@ In order to send out batch emails, your JSON data must include an array of indiv
 ]
 ```
 
-**An array of objects can be used to send to multiple email addresses at once:**
+**Or an array of objects can be used to specify more than one email recipient:**
 ```json
 [
   {
