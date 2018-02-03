@@ -1,25 +1,25 @@
 module.exports = function( grunt ) {
-  
+
   let path = require('path'),
       extend = require('extend'),
       pkg = require('./package.json'),
       config = require('./package-config.json');
-  
+
   const PATHS = config.paths;
-  
+
   grunt.config.set('pkg', pkg);
   grunt.config.set('config', (config = grunt.config.process(config)));
-  
+
   let type = function( thing ) {
-    
+
         if( thing === null ) return 'null';
         else if ( thing instanceof Array === true ) return 'array';
         else if ( typeof thing === 'object' ) return 'object';
         else return typeof thing;
-    
+
       },
       replacement = function( options ) {
-    
+
         let result = [],
             settings = extend({
               sources: [],
@@ -29,14 +29,14 @@ module.exports = function( grunt ) {
               match: ':file'
             }, options);
 
-        if( !settings.sources ) return; 
+        if( !settings.sources ) return;
 
         if( type(settings.sources) === 'object' ) settings.sources = Object.keys(settings.sources);
-        
+
         settings.sources = settings.sources.reduce((previous, current) => {
 
           return type(current) === 'object' ? [...previous, ...Object.keys(current)] : [...previous, current];
-          
+
         }, []);
 
         settings.sources.forEach(function(source){
@@ -46,7 +46,7 @@ module.exports = function( grunt ) {
               src = source.indexOf('//') == -1 ? settings.path + file : file,
               template = settings.template.replace( settings.match, src );
 
-          result.push( template ); 
+          result.push( template );
 
         });
 
@@ -77,7 +77,7 @@ module.exports = function( grunt ) {
       },
       html: {
         files: [
-          path.resolve(PATHS.src.root, '*.html'), 
+          path.resolve(PATHS.src.root, '*.html'),
           path.resolve(PATHS.src.partials, '**/*.html'),
           path.resolve(PATHS.src.includes, '**/*.html')
         ],
@@ -85,7 +85,7 @@ module.exports = function( grunt ) {
       },
       assets: {
         files: [
-          path.resolve(PATHS.src.images, '**/*'), 
+          path.resolve(PATHS.src.images, '**/*'),
           path.resolve(PATHS.src.fonts, '**/*')
         ],
         tasks: ['copy:dev']
@@ -95,8 +95,8 @@ module.exports = function( grunt ) {
           reload: true,
         },
         files: [
-          'package.json', 
-          'package-config.json', 
+          'package.json',
+          'package-config.json',
           'Gruntfile.js',
           '.babelrc',
           '.jshintrc',
@@ -217,35 +217,35 @@ module.exports = function( grunt ) {
             {
               match: 'css',
               replacement: replacement({
-                sources: config.css, 
-                path: PATHS.dev.css.replace('dev/', ''),  
+                sources: config.css,
+                path: PATHS.dev.css.replace('dev/', ''),
                 template: '<link rel="stylesheet" href=":file">',
                 ext: '.css'
               })
             },
-            { 
+            {
               match: 'js',
               replacement: replacement({
-                sources: config.js, 
-                path: PATHS.dev.js.replace('dev/', ''),  
+                sources: config.js,
+                path: PATHS.dev.js.replace('dev/', ''),
                 template: '<script src=":file"></script>',
                 ext: '.js'
               })
             },
-            { 
+            {
               match: 'dependencies:css',
               replacement: replacement({
-                sources: config.dependencies.css, 
-                path: PATHS.dev.dependencies.css.replace('dev/', ''),  
+                sources: config.dependencies.css,
+                path: PATHS.dev.dependencies.css.replace('dev/', ''),
                 template: '<link rel="stylesheet" href=":file">',
                 ext: '.css'
               })
             },
-            { 
+            {
               match: 'dependencies:js',
               replacement: replacement({
-                sources: config.dependencies.js, 
-                path: PATHS.dev.dependencies.js.replace('dev/', ''),  
+                sources: config.dependencies.js,
+                path: PATHS.dev.dependencies.js.replace('dev/', ''),
                 template: '<script src=":file"></script>',
                 ext: '.js'
               })
@@ -289,35 +289,35 @@ module.exports = function( grunt ) {
             {
               match: 'css',
               replacement: replacement({
-                sources: config.css, 
-                path: PATHS.dist.css.replace('dist/', ''),  
+                sources: config.css,
+                path: PATHS.dist.css.replace('dist/', ''),
                 template: '<link rel="stylesheet" href=":file">',
                 ext: '.min.css'
               })
             },
-            { 
+            {
               match: 'js',
               replacement: replacement({
-                sources: config.js, 
-                path: PATHS.dist.js.replace('dist/', ''),  
+                sources: config.js,
+                path: PATHS.dist.js.replace('dist/', ''),
                 template: '<script src=":file"></script>',
                 ext: '.min.js'
               })
             },
-            { 
+            {
               match: 'dependencies:css',
               replacement: replacement({
-                sources: config.dependencies.css, 
-                path: PATHS.dist.dependencies.css.replace('dist/', ''),  
+                sources: config.dependencies.css,
+                path: PATHS.dist.dependencies.css.replace('dist/', ''),
                 template: '<link rel="stylesheet" href=":file">',
                 ext: '.min.css'
               })
             },
-            { 
+            {
               match: 'dependencies:js',
               replacement: replacement({
-                sources: config.dependencies.js, 
-                path: PATHS.dist.dependencies.js.replace('dist/', ''),  
+                sources: config.dependencies.js,
+                path: PATHS.dist.dependencies.js.replace('dist/', ''),
                 template: '<script src=":file"></script>',
                 ext: '.min.js'
               })
@@ -390,7 +390,7 @@ module.exports = function( grunt ) {
             src: ['**/*'],
             dest: PATHS.dev.includes,
             dot: true
-          }, 
+          },
           {
             expand: true,
             cwd: PATHS.composer.root,
@@ -445,8 +445,15 @@ module.exports = function( grunt ) {
     clean: {
       dev: [PATHS.dev.root],
       dist: [PATHS.dist.root],
-      unmincss: [path.resolve(PATHS.dist.css, '**/*.css'), '!' + path.resolve(PATHS.dist.css, '**/*.min.css')],
-      unminjs: [path.resolve(PATHS.dist.js, '**/*.js'), '!' + path.resolve(PATHS.dist.js, '**/*.min.js')]
+      unmincss: [
+        PATHS.dist.css + '**/*.css',
+        '!' + PATHS.dist.css + '**/*.min.css'
+      ],
+      unminjs: [
+        PATHS.dist.js + '**/*.js',
+        '!' + PATHS.dist.js + '**/*.min.js',
+        '!' + PATHS.dist.dependencies.js + 'codemirror/mode/*.js'
+      ]
     },
     jshint: {
       dev: {
@@ -524,10 +531,9 @@ module.exports = function( grunt ) {
             expand: true,
             cwd: PATHS.dist.js,
             src: [
-              '**/*.js', 
-              '!**/*.min.js',
+              '**/*.js',
               '!' + path.resolve(PATHS.dist.dependencies.js, '**/vue.js'),
-              '!' + path.resolve(PATHS.dist.dependencies.js, '/codemirror/*.js')
+              '!' + path.resolve(PATHS.dist.dependencies.js, '/codemirror/mode/*.js')
             ],
             dest: PATHS.dist.js,
             ext: '.min.js'
@@ -558,7 +564,7 @@ module.exports = function( grunt ) {
       }
     }
   });
-  
+
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-sass');
@@ -571,7 +577,7 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-copy-deps');
   grunt.loadNpmTasks('grunt-postcss');
-  
+
   grunt.registerTask('default', ['dev']);
    grunt.registerTask('dev:startup', [
     'clean:dev',
@@ -585,7 +591,7 @@ module.exports = function( grunt ) {
     'replace:dev'
   ]);
   grunt.registerTask('dev', [
-    'dev:startup', 
+    'dev:startup',
     'watch'
   ]);
   grunt.registerTask('dist', [
@@ -600,7 +606,7 @@ module.exports = function( grunt ) {
     'uglify:dist',
     'clean:unminjs',
     'includes:dist',
-    'replace:dist' 
+    'replace:dist'
   ]);
-  
+
 };
