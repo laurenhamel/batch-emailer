@@ -7,14 +7,14 @@ include "config.php";
 $action = $_GET['action'];
 
 // Ignore invalid requests.
-if( !$action ) {
-  
+if( !isset($action) ) {
+
   // The request was bad.
   http_response_code( 400 );
-  
+
   // Kill the emailer.
   die( "Your request could not be processed. An `action` parameter is missing." );
-  
+
 }
 
 // Get the incoming request parameters.
@@ -26,21 +26,21 @@ $emailer = new BatchEmailer( $template, $data );
 
 // Process the request.
 try {
-  
+
   // Capture the result.
   $result = $emailer->$action();
-  
+
 }
 
 // The request could not be processed.
 catch (Exception $exception) {
-  
+
   // Send a "Bad Request" response code.
   http_response_code( 400 );
-  
+
   // Kill the emailer.
   die( "Your request could not be processed. Error: $exception" );
-  
+
 }
 
 // Output a response.

@@ -13,7 +13,7 @@ define('INCLUDES', ROOT.'/includes/');
 
 // Initialize environment variables.
 $dotenv = new Dotenv\Dotenv(ROOT);
-  
+
 // Load environment variables.
 $dotenv->load();
 
