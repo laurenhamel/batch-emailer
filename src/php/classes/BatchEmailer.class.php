@@ -146,21 +146,21 @@ trait Email {
       if( $email['data']['cc'] ) {
         if( gettype($email['data']['cc']) == 'string' ) {
 
-          $emailer->to( $email['data']['cc'] );
+          $emailer->cc( $email['data']['cc'] );
 
         }
         else if( !$email['data']['cc']['email'] ) {
 
           foreach($email['data']['cc'] as $copy) {
 
-            $emailer->to( $copy['email'], $copy['name'] );
+            $emailer->cc( $copy['email'], $copy['name'] );
 
           }
 
         }
         else {
 
-          $emailer->to( $email['data']['cc']['email'], $email['data']['cc']['name'] );
+          $emailer->cc( $email['data']['cc']['email'], $email['data']['cc']['name'] );
 
         }
       }
@@ -169,21 +169,21 @@ trait Email {
       if( $email['data']['bcc'] ) {
         if( gettype($email['data']['bcc']) == 'string' ) {
 
-          $emailer->to( $email['data']['bcc'] );
+          $emailer->bcc( $email['data']['bcc'] );
 
         }
         else if( !$email['data']['bcc']['email'] ) {
 
           foreach($email['data']['bcc'] as $copy) {
 
-            $emailer->to( $copy['email'], $copy['name'] );
+            $emailer->bcc( $copy['email'], $copy['name'] );
 
           }
 
         }
         else {
 
-          $emailer->to( $email['data']['bcc']['email'], $email['data']['bcc']['name'] );
+          $emailer->bcc( $email['data']['bcc']['email'], $email['data']['bcc']['name'] );
 
         }
       }
