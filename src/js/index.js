@@ -47,6 +47,8 @@ let Controller = Vue.component('controller', {
       ],
       responses: 0,
       action: 'preview',
+      read: false,
+      delivered: false,
       template: null,
       data: null
     };
@@ -97,15 +99,44 @@ let Controller = Vue.component('controller', {
     test() {
 
       // Capture self.
-      let self = this;
+      let self = this,
+          data = JSON.parse(self.data);
 
       // Reset responses.
       self.response = 0;
 
+      // Merge data.
+      data.forEach(function(obj, i) {
+
+        if( obj.hasOwnProperty('receipts') ) {
+          if( !obj.receipts.hasOwnProperty('read') ) {
+
+            obj = $.extend(true, obj, {receipts: {read: self.read}});
+
+          }
+          if( !obj.receipts.hasOwnProperty('delivered') ) {
+
+            obj = $.extend(true, obj, {receipts: {delivered: self.delivered}});
+
+          }
+        }
+        else {
+          obj = $.extend(true, obj, {
+            receipts: {
+              read: self.read,
+              delivered: self.delivered
+            }
+          });
+        }
+
+        data[i] = obj;
+
+      });
+
       // Send tests.
       $.post('php/emailer.php?action=test', {
-        template: this.template,
-        data: this.data,
+        template: self.template,
+        data: JSON.stringify(data),
       }, (response) => {
         Events.$emit('results:incoming', response);
       }, 'json');
@@ -115,15 +146,44 @@ let Controller = Vue.component('controller', {
     email() {
 
       // Capture self.
-      let self = this;
+      let self = this,
+          data = JSON.parse(self.data);
 
       // Reset responses.
       self.response = 0;
 
+      // Merge data.
+      data.forEach(function(obj, i) {
+
+        if( obj.hasOwnProperty('receipts') ) {
+          if( !obj.receipts.hasOwnProperty('read') ) {
+
+            obj = $.extend(true, obj, {receipts: {read: self.read}});
+
+          }
+          if( !obj.receipts.hasOwnProperty('delivered') ) {
+
+            obj = $.extend(true, obj, {receipts: {delivered: self.delivered}});
+
+          }
+        }
+        else {
+          obj = $.extend(true, obj, {
+            receipts: {
+              read: self.read,
+              delivered: self.delivered
+            }
+          });
+        }
+
+        data[i] = obj;
+
+      });
+
       // Send emails.
       $.post('php/emailer.php?action=email', {
         template: this.template,
-        data: this.data
+        data: JSON.stringify(data)
       }, (response) => {
         Events.$emit('results:incoming', response);
       }, 'json');

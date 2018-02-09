@@ -1,5 +1,8 @@
 <?php
 
+// Set content type.
+header("Content-type: application/json");
+
 // Load configurations.
 include "config.php";
 
@@ -24,26 +27,24 @@ $data = $_POST['data'];
 // Start batch emailer.
 $emailer = new BatchEmailer( $template, $data );
 
-// Process the request.
-try {
+// Verify the action.
+if( method_exists($emailer, $action) ) {
 
-  // Capture the result.
+  // Process the request.
   $result = $emailer->$action();
+
+  // Return the result.
+  echo json_encode($result);
 
 }
 
 // The request could not be processed.
-catch (Exception $exception) {
+else {
 
-  // Send a "Bad Request" response code.
   http_response_code( 400 );
 
-  // Kill the emailer.
-  die( "Your request could not be processed. Error: $exception" );
+  die( "Your request could not be processed." );
 
 }
-
-// Output a response.
-echo $result;
 
 ?>

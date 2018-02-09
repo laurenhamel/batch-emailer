@@ -18,6 +18,11 @@ class Emailer extends PHPMailer {
     'Attachments' => []
   ];
 
+  public $receipts = [
+    'read' => [],
+    'delivered' => []
+  ];
+
   function __construct(){
 
     // Load mail engine.
@@ -41,7 +46,7 @@ class Emailer extends PHPMailer {
   function from( $email, $name = '' ) {
 
     $this->settings['From'] = ['email' => $email, 'name' => $name];
-    echo json_encode($this->settings['From']);
+
   }
 
   function to( $email, $name = '' ) {
@@ -96,6 +101,18 @@ class Emailer extends PHPMailer {
 
   }
 
+  function readReceipt( $notify ) {
+
+    $this->receipts['read'][] = $notify;
+
+  }
+
+  function deliveryReceipt( $notify ) {
+
+    $this->receipts['delivered'][] = $notify;
+
+  }
+
   function send() {
 
     // Capture settings.
@@ -136,6 +153,25 @@ class Emailer extends PHPMailer {
     foreach($settings['Attachments'] as $attachments) {
 
       $this->mail->addAttachment($attachment['file'], $attachment['name']);
+
+    }
+
+    // Enable read receipts.
+    if( !empty($this->receipts['read']) ) {
+
+      $notify = implode(', ', $this->receipts['read']);
+
+      $this->mail->AddCustomHeader("X-Confirm-Reading-To: $notify");
+      $this->mail->AddCustomHeader("Disposition-Notification-To: $notify");
+
+    }
+
+    // Enable delivery receipts.
+    if( !empty($this->receipts['delivered']) ) {
+
+      $notify = implode(', ', $this->receipts['delivered']);
+
+      $this->mail->AddCustomHeader("Return-Receipt-To: $notify");
 
     }
 

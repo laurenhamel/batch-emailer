@@ -1,7 +1,7 @@
 <template id="template-controller">
 
   <section id="controller">
-  
+
     <div class="select">
       <select v-model="action">
         <option v-for="action in actions" :value="action">
@@ -9,9 +9,25 @@
         </option>
       </select>
     </div>
-    
+
     <button class="button" @click="process">Go</button>
-    
+
+    <label class="checkbox"
+           :class="{checked: read}"
+           v-if="action != 'preview'">
+      Read Receipt
+      <input type="checkbox"
+             v-model="read">
+    </label>
+
+    <label class="checkbox"
+           :class="{checked: delivered}"
+           v-if="action != 'preview'">
+      Delivery Receipt
+      <input type="checkbox"
+             v-model="delivered">
+    </label>
+
   </section>
 
 </template>

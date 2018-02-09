@@ -5,9 +5,9 @@ trait Preview {
   public function preview() {
 
     // Return previews.
-    return json_encode(array_map(function($bound){
+    return array_map(function($bound){
       return $bound['template'];
-    }, $this->bound));
+    }, $this->bound);
 
   }
 
@@ -24,10 +24,14 @@ trait Test {
     shuffle( $emails );
 
     // Get the limit on how many tests to send.
-    $limit = $_POST['limit'] ?: false;
+    $limit = isset($_POST['limit']) ? $_POST['limit'] : false;
 
     // Handle limits.
-    if( $limit !== false and is_numeric($limit) ) $emails = array_slice($emails, $limit);
+    if( $limit !== false and is_numeric($limit) ) {
+
+      $emails = array_slice($emails, $limit);
+
+    }
 
     // Initialize results.
     $results = [];
@@ -46,6 +50,16 @@ trait Test {
       $emailer->subject( $email['data']['subject'] );
       $emailer->message( $email['template'] );
 
+      // Set receipts.
+      if( $email['data']['receipts'] ) {
+        if( $email['data']['receipts']['read'] === true ) {
+          $emailer->readReceipt( $_ENV['FROM_EMAIL'] );
+        }
+        if( $email['data']['receipts']['delivered'] === true ) {
+          $emailer->deliveryReceipt( $_ENV['FROM_EMAIL'] );
+        }
+      }
+
       // Send the email.
       $results[] = $emailer->send();
 
@@ -60,7 +74,7 @@ trait Test {
     }));
 
     // Return the results.
-    return json_encode(['sent' => $sent, 'failed' => $failed, 'results' => $results]);
+    return ['sent' => $sent, 'failed' => $failed, 'results' => $results];
 
   }
 
@@ -80,7 +94,11 @@ trait Email {
     $limit = $_POST['limit'] ?: false;
 
     // Handle limits.
-    if( $limit !== false and is_numeric($limit) ) $emails = array_slice($emails, $limit);
+    if( $limit !== false and is_numeric($limit) ) {
+
+      $emails = array_slice($emails, $limit);
+
+    }
 
     // Initialize results.
     $results = [];
@@ -170,6 +188,26 @@ trait Email {
         }
       }
 
+      // Set receipts.
+      if( $email['data']['receipts'] ) {
+        if( $email['data']['receipts']['read'] === true ) {
+          if( gettype($email['data']['from'] == 'string') ) {
+            $emailer->readReceipt( $email['data']['from'] );
+          }
+          else {
+            $emailer->readReceipt( $email['data']['from']['email'] );
+          }
+        }
+        if( $email['data']['receipts']['delivered'] === true ) {
+          if( gettype($email['data']['from'] == 'string') ) {
+            $emailer->deliveryReceipt( $email['data']['from'] );
+          }
+          else {
+            $emailer->deliveryReceipt( $email['data']['from']['email'] );
+          }
+        }
+      }
+
       // Set email parameters.
       $emailer->subject( $email['data']['subject'] );
       $emailer->message( $email['template'] );
@@ -188,7 +226,7 @@ trait Email {
     }));
 
     // Return the results.
-    return json_encode(['sent' => $sent, 'failed' => $failed, 'results' => $results]);
+    return ['sent' => $sent, 'failed' => $failed, 'results' => $results];
 
   }
 

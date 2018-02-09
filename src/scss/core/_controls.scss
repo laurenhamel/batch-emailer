@@ -1,28 +1,28 @@
 #controls {
-  
+
   @include padding-x( 10px );
   margin-top: 10px;
-  
+
   $height: 50px;
   $border: 1px solid black;
-  
+
   #controller {
     display: grid;
-    grid-template-columns: 250px 100px;
-    grid-template-areas: "dropdown button";
+    grid-template-columns: 250px 100px 50px 50px;
+    grid-template-areas: "dropdown button read delivered";
     grid-template-rows: 50px;
     margin: 0 auto;
     grid-gap: 10px;
     justify-content: center;
-    
-    .select { 
+
+    .select {
       grid-column: dropdown;
       display: flex;
       align-items: center;
       justify-content: center;
       border: $border;
-      
-      select { 
+
+      select {
         position: absolute;
         display: block;
         @include size( 100% );
@@ -36,7 +36,7 @@
         padding: 10px;
         cursor: pointer;
       }
-      
+
       &::after {
         content: $fa-var-chevron-down;
         font-family: FontAwesome;
@@ -49,21 +49,52 @@
         top: 0;
         z-index: -1;
       }
-      
+
     }
-    
+
     .button {
       grid-column: button;
       border: $border;
-      
+
       &:hover,
       &:focus {
         background-color: black;
         color: white;
       }
-      
+
     }
-    
+
+    .checkbox {
+      font-size: 8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border: $border;
+      color: grey;
+      cursor: pointer;
+
+      &.checked::after {
+        content: $fa-var-check;
+        font-family: FontAwesome;
+        font-size: 3em;
+        display: block;
+        background-color: white;
+        @include size( 48px );
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+    }
+
   }
-  
+
 }
