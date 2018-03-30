@@ -17,6 +17,19 @@ String.prototype.toTitleCase = function( proper = false ) {
   return titlecase;
 
 };
+Array.prototype.unique = function() {
+
+  let result = [];
+
+  this.forEach((value) => {
+
+    if( result.indexOf(value) < 0 ) result.push(value);
+
+  });
+
+  return result;
+
+};
 
 // Globals
 let filters = {
@@ -32,6 +45,33 @@ let methods = {};
 
 // Events
 let Events = new Vue();
+
+// Microdata
+let Microdata = Vue.component('microdata', {
+
+  template: '#template-microdata',
+
+  data() {
+    return {
+      subject: null,
+    };
+  },
+
+  filters: $.extend({}, filters),
+
+  methods: $.extend({
+
+    save() {
+
+      Events.$emit('microdata:change', {subject: this.subject});
+
+    }
+
+  }, methods),
+
+  created() {}
+
+});
 
 // Controller
 let Controller = Vue.component('controller', {
@@ -50,7 +90,8 @@ let Controller = Vue.component('controller', {
       read: false,
       delivered: false,
       template: null,
-      data: null
+      data: null,
+      microdata: null
     };
   },
 
@@ -108,6 +149,7 @@ let Controller = Vue.component('controller', {
       // Merge data.
       data.forEach(function(obj, i) {
 
+        // Merge recipient data.
         if( obj.hasOwnProperty('receipts') ) {
           if( !obj.receipts.hasOwnProperty('read') ) {
 
@@ -129,6 +171,41 @@ let Controller = Vue.component('controller', {
           });
         }
 
+        // Merge microdata.
+        for(let key in self.microdata) {
+
+          if( !obj.hasOwnProperty(key) ) obj[key] = self.microdata[key];
+          else {
+
+            if( $.isArray(obj[key]) ) {
+
+              if( $.isArray(self.microdata[key]) ) obj[key] = obj[key].concat(self.microdata[key]).unique();
+              else {
+
+                obj[key].push(self.microdata[key]);
+
+                obj[key] = obj[key].unique();
+
+              }
+
+            }
+
+            else if( obj[key] !== null && obj[key] instanceof Object ) {
+
+              if( self.microdata[key] !== null && self.microdata[key] instanceof Object ) {
+
+                obj[key] = $.extend(true, obj[key], self.microdata[key]);
+
+              }
+
+            }
+
+            else if( !obj[key] ) obj[key] = self.microdata[key];
+
+          }
+
+        }
+
         data[i] = obj;
 
       });
@@ -136,7 +213,7 @@ let Controller = Vue.component('controller', {
       // Send tests.
       $.post('php/emailer.php?action=test', {
         template: self.template,
-        data: JSON.stringify(data),
+        data: JSON.stringify(data)
       }, (response) => {
         Events.$emit('results:incoming', response);
       }, 'json');
@@ -155,6 +232,7 @@ let Controller = Vue.component('controller', {
       // Merge data.
       data.forEach(function(obj, i) {
 
+        // Merge recipient data.
         if( obj.hasOwnProperty('receipts') ) {
           if( !obj.receipts.hasOwnProperty('read') ) {
 
@@ -174,6 +252,41 @@ let Controller = Vue.component('controller', {
               delivered: self.delivered
             }
           });
+        }
+
+        // Merge microdata.
+        for(let key in self.microdata) {
+
+          if( !obj.hasOwnProperty(key) ) obj[key] = self.microdata[key];
+          else {
+
+            if( $.isArray(obj[key]) ) {
+
+              if( $.isArray(self.microdata[key]) ) obj[key] = obj[key].concat(self.microdata[key]).unique();
+              else {
+
+                obj[key].push(self.microdata[key]);
+
+                obj[key] = obj[key].unique();
+
+              }
+
+            }
+
+            else if( obj[key] !== null && obj[key] instanceof Object ) {
+
+              if( self.microdata[key] !== null && self.microdata[key] instanceof Object ) {
+
+                obj[key] = $.extend(true, obj[key], self.microdata[key]);
+
+              }
+
+            }
+
+            else if( !obj[key] ) obj[key] = self.microdata[key];
+
+          }
+
         }
 
         data[i] = obj;
@@ -205,6 +318,9 @@ let Controller = Vue.component('controller', {
       self.responses++;
 
     });
+
+    // Capture microdata.
+    Events.$on('microdata:change', (data) => { self.microdata = data; });
 
   }
 

@@ -36,6 +36,7 @@ class Emailer extends PHPMailer {
     $mail->SMTPAuth = true;
     $mail->Username = $_ENV['USERNAME'];
     $mail->Password = $_ENV['PASSWORD'];
+    $mail->CharSet = 'UTF-8';
     if( (bool) $_ENV['TLS'] ) $mail->SMTPSecure = 'tls';
 
     // Save engine.
