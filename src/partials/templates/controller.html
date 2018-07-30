@@ -10,7 +10,7 @@
       </select>
     </div>
 
-    <button class="button" @click="process">Go</button>
+    <button class="button" @click="process" :disabled="disabled">Go</button>
 
     <label class="checkbox"
            :class="{checked: read}"

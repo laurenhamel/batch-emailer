@@ -91,7 +91,8 @@ let Controller = Vue.component('controller', {
       delivered: false,
       template: null,
       data: null,
-      microdata: null
+      microdata: null,
+      disabled: false
     };
   },
 
@@ -123,16 +124,21 @@ let Controller = Vue.component('controller', {
     },
 
     preview() {
+      
+      // Capture self.
+      let self = this;
 
       // Reset responses.
-      this.response = 0;
+      self.response = 0;
+      self.disabled = true;
 
       // Get previews.
       $.post('php/emailer.php?action=preview', {
-        template: this.template,
-        data: this.data
+        template: self.template,
+        data: self.data
       }, (response) => {
         Events.$emit('previewer:incoming', {previews: response});
+        self.disabled = false;
       }, 'json');
 
     },
@@ -145,6 +151,7 @@ let Controller = Vue.component('controller', {
 
       // Reset responses.
       self.response = 0;
+      self.disabled = true;
 
       // Merge data.
       data.forEach(function(obj, i) {
@@ -214,9 +221,10 @@ let Controller = Vue.component('controller', {
       $.post('php/emailer.php?action=test', {
         template: self.template,
         data: JSON.stringify(data)
-      }, (response) => {
+      }, 'json').done((response) => {
         Events.$emit('results:incoming', response);
-      }, 'json');
+        self.disabled = false;
+      }).fail((error) => console.log(error));
 
     },
 
@@ -228,6 +236,7 @@ let Controller = Vue.component('controller', {
 
       // Reset responses.
       self.response = 0;
+      self.disabled = true;
 
       // Merge data.
       data.forEach(function(obj, i) {
@@ -295,11 +304,12 @@ let Controller = Vue.component('controller', {
 
       // Send emails.
       $.post('php/emailer.php?action=email', {
-        template: this.template,
+        template: self.template,
         data: JSON.stringify(data)
-      }, (response) => {
+      }, 'json').done((response) => {
         Events.$emit('results:incoming', response);
-      }, 'json');
+        self.disabled = false;
+      }).fail((error) => console.log(error));
 
     }
 

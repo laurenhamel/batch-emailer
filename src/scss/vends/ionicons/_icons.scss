@@ -735,7 +735,8 @@
 .#{$ionicons-prefix}wrench:before,
 .#{$ionicons-prefix}xbox:before
 {
-  @extend [class*=" #{$ionicons-prefix}"], [class^="#{$ionicons-prefix}"];
+  @extend [class*=" #{$ionicons-prefix}"];
+  @extend [class^="#{$ionicons-prefix}"];
 }
 .#{$ionicons-prefix}alert:before { content: $ionicon-var-alert; }
 .#{$ionicons-prefix}alert-circled:before { content: $ionicon-var-alert-circled; }
