@@ -6,17 +6,9 @@ use PHPMailer\PHPMailer\Exception;
 class Emailer extends PHPMailer {
 
   protected $mail;
-
-  public $settings = [
-    'Subject'     => null,
-    'Message'     => null,
-    'From'        => [],
-    'To'          => [],
-    'CC'          => [],
-    'BCC'         => [],
-    'ReplyTo'     => [],
-    'Attachments' => []
-  ];
+  
+  // FOR DEVELOPMENT ONLY: Set to `false` before production.
+  private $debugging = false;
 
   public $receipts = [
     'read' => [],
@@ -26,179 +18,284 @@ class Emailer extends PHPMailer {
   function __construct(){
 
     // Load mail engine.
-    $mail = new PHPMailer(true);
+    $this->mail = new PHPMailer(true);
 
     // Configure the engine.
-    $mail->isHTML(true);
-    $mail->isSMTP();
-    $mail->Host = $_ENV['HOST'];
-    $mail->Port = $_ENV['PORT'];
-    $mail->SMTPAuth = true;
-    $mail->Username = $_ENV['USERNAME'];
-    $mail->Password = $_ENV['PASSWORD'];
-    $mail->CharSet = 'UTF-8';
-    if( (bool) $_ENV['TLS'] ) $mail->SMTPSecure = 'tls';
-
-    // Save engine.
-    $this->mail = $mail;
+    $this->mail->isHTML(true);
+    $this->mail->isSMTP();
+    $this->mail->Host = $_ENV['HOST'];
+    $this->mail->Port = $_ENV['PORT'];
+    $this->mail->SMTPAuth = true;
+    $this->mail->Username = $_ENV['USERNAME'];
+    $this->mail->Password = $_ENV['PASSWORD'];
+    $this->mail->CharSet = 'UTF-8';
+    if( $this->debugging ) $this->mail->SMTPDebug = 2;
+    if( (bool) $_ENV['TLS'] ) $this->mail->SMTPSecure = 'tls';
 
   }
 
-  function from( $email, $name = '' ) {
+  public function from( $email, $name = '' ) {
 
-    $this->settings['From'] = ['email' => $email, 'name' => $name];
+    try { 
+      
+      $this->mail->setFrom($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function to( $email, $name = '' ) {
 
-    $this->settings['To'][] = ['email' => $email, 'name' => $name];
-
-    return count($this->settings['To']) - 1;
+    try { 
+      
+      $this->mail->addAddress($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function cc( $email, $name = '' ) {
 
-    $this->settings['CC'][] = ['email' => $email, 'name' => $name];
-
-    return count($this->settings['CC']) - 1;
+    try { 
+      
+      $this->mail->addCC($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function bcc( $email, $name = '' ) {
 
-    $this->settings['BCC'][] = ['email' => $email, 'name' => $name];
-
-    return count($this->settings['BCC']) - 1;
+    try { 
+      
+      $this->mail->addBCC($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function replyto( $email, $name = '' ) {
 
-    $this->settings['ReplyTo'][] = ['email' => $email, 'name' => $name];
-
-    return count($this->settings['ReplyTo']) - 1;
+    try { 
+      
+      $this->mail->addReplyTo($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function attach( $file, $name = '' ) {
 
-    $this->settings['Attachments'][] = ['file' => $email, 'name' => $name];
-
-    return count($this->settings['Attachments']) - 1;
+    try { 
+      
+      $this->mail->addAttachment($email, $name); 
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function subject( $subject ) {
 
-    $this->settings['Subject'] = $subject;
+    try { 
+      
+      $this->mail->Subject = $subject;
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function message( $message ) {
 
-    $this->settings['Message'] = $message;
+    try { 
+      
+      $this->mail->Body = $message;
+      $this->mail->AltBody = strip_tags($message);
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function readReceipt( $notify ) {
 
-    $this->receipts['read'][] = $notify;
+    try { 
+      
+      $this->mail->AddCustomHeader("X-Confirm-Reading-To: $notify");
+      $this->mail->AddCustomHeader("Disposition-Notification-To: $notify");
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function deliveryReceipt( $notify ) {
 
-    $this->receipts['delivered'][] = $notify;
+    try { 
+      
+      $this->mail->AddCustomHeader("Return-Receipt-To: $notify");
+    
+    } 
+    
+    catch( phpmailerException $error ) {
+      
+      throw $error;
+      
+    }
+    
+    catch( Exception $error ) {
+      
+      throw $error;
+      
+    }
 
   }
 
   function send() {
-
-    // Capture settings.
-    $settings = $this->settings;
-
-    // Set sender.
-    $this->mail->setFrom($settings['From']['email'], $settings['From']['name']);
-
-    // Add recipients.
-    foreach($settings['To'] as $recipient) {
-
-      $this->mail->addAddress($recipient['email'], $recipient['name']);
-
-    }
-
-    // Add reply to addresses.
-    foreach($settings['ReplyTo'] as $address) {
-
-      $this->mail->addReplyTo($address['email'], $address['name']);
-
-    }
-
-    // Add clear copies.
-    foreach($settings['CC'] as $copy) {
-
-      $this->mail->addCC($copy['email'], $copy['name']);
-
-    }
-
-    // Add blind copies.
-    foreach($settings['BCC'] as $blind) {
-
-      $this->mail->addBCC($blind['email'], $blind['name']);
-
-    }
-
-    // Add attachments.
-    foreach($settings['Attachments'] as $attachments) {
-
-      $this->mail->addAttachment($attachment['file'], $attachment['name']);
-
-    }
-
-    // Enable read receipts.
-    if( !empty($this->receipts['read']) ) {
-
-      $notify = implode(', ', $this->receipts['read']);
-
-      $this->mail->AddCustomHeader("X-Confirm-Reading-To: $notify");
-      $this->mail->AddCustomHeader("Disposition-Notification-To: $notify");
-
-    }
-
-    // Enable delivery receipts.
-    if( !empty($this->receipts['delivered']) ) {
-
-      $notify = implode(', ', $this->receipts['delivered']);
-
-      $this->mail->AddCustomHeader("Return-Receipt-To: $notify");
-
-    }
-
-    // Set subject.
-    $this->mail->Subject = $settings['Subject'];
-
-    // Set message.
-    $this->mail->Body = $settings['Message'];
-
-    // Set plain text version of message.
-    $this->mail->AltBody = strip_tags($settings['Message']);
-
-    // Send the email.
-    $result = $this->mail->send();
-
-    // Email successful.
-    if( !$result ) return [
-      "success" => false,
-      "error" => $this->mail->ErrorInfo,
-      "to" => $settings['To']
+    
+    // Initialize the result.
+    $result = [
+      'success' => true,
+      'error' => false,
+      'to' => $this->mail->getToAddresses()
     ];
 
-    return $results = [
-      "success" => true,
-      "to" => $settings['To']
-    ];
+    // Try to send the email.
+    try {
+      
+      // Send the email.
+      $this->mail->send();
+      
+    }
+    
+    // Catch mailer errors.
+    catch( phpmailerException $error ) {
+      
+      // Save the error.
+      $result['error'] = true;
+      $result['message'] = $error->getMessage();
+      
+    }
+    
+    // Catch generic errors.
+    catch( Exception $error ) {
+      
+      // Save the error.
+      $result['error'] = true;
+      $result['message'] = $error->getMessage();
+      
+    }
+
+    // Check for errors.
+    if( $result['error'] ) $result['success'] = false;
+
+    // Return the result.
+    return $result;
 
   }
 

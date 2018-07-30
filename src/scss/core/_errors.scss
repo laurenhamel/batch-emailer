@@ -1,0 +1,7 @@
+.errors {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-template-columns: 100%;
+  grid-gap: 10px;
+  @include margin-x( 10px );
+}

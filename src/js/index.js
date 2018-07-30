@@ -31,6 +31,13 @@ Array.prototype.unique = function() {
 
 };
 
+// Extend.
+$.isObject = function( object ) {
+  
+  return !$.isArray(object) && object !== null && object instanceof Object;
+  
+};
+
 // Globals
 let filters = {
 
@@ -45,6 +52,44 @@ let methods = {};
 
 // Events
 let Events = new Vue();
+
+// API
+let Batchailer = new Vue({
+  
+  data: {
+    src: 'php/batchailer.php'
+  },
+  
+  methods: {
+    
+    request( method, template, data ) {
+      
+      return $.post(`${this.src}?action=${method}`, {template, data}, 'json')
+        .fail((error) => console.log(error));
+      
+    },
+    
+    preview( template, data ) {
+      
+      return this.request('PREVIEW', template, data);
+      
+    },
+    
+    test( template, data ) {
+      
+      return this.request('TEST', template, JSON.stringify(data));
+      
+    },
+    
+    email( template, data ) {
+      
+      return this.request('EMAIL', template, data);
+      
+    }
+    
+  }
+  
+});
 
 // Microdata
 let Microdata = Vue.component('microdata', {
@@ -125,192 +170,61 @@ let Controller = Vue.component('controller', {
 
     preview() {
       
-      // Capture self.
-      let self = this;
+      // Reset the previewer.
+      Events.$emit('previewer:reset');
+      
+      // Reset errors.
+      Events.$emit('errors:reset');
 
       // Reset responses.
-      self.response = 0;
-      self.disabled = true;
+      this.response = 0;
+      this.disabled = true;
 
       // Get previews.
-      $.post('php/emailer.php?action=preview', {
-        template: self.template,
-        data: self.data
-      }, (response) => {
-        Events.$emit('previewer:incoming', {previews: response});
-        self.disabled = false;
-      }, 'json');
+      Batchailer.preview(this.template, this.data)
+        .done((previews) => Events.$emit('previewer:incoming', {previews}))
+        .always(() => this.disabled = false);
 
     },
 
     test() {
-
-      // Capture self.
-      let self = this,
-          data = JSON.parse(self.data);
+      
+      // Reset errors.
+      Events.$emit('errors:reset');
 
       // Reset responses.
-      self.response = 0;
-      self.disabled = true;
-
-      // Merge data.
-      data.forEach(function(obj, i) {
-
-        // Merge recipient data.
-        if( obj.hasOwnProperty('receipts') ) {
-          if( !obj.receipts.hasOwnProperty('read') ) {
-
-            obj = $.extend(true, obj, {receipts: {read: self.read}});
-
-          }
-          if( !obj.receipts.hasOwnProperty('delivered') ) {
-
-            obj = $.extend(true, obj, {receipts: {delivered: self.delivered}});
-
-          }
-        }
-        else {
-          obj = $.extend(true, obj, {
-            receipts: {
-              read: self.read,
-              delivered: self.delivered
-            }
-          });
-        }
-
-        // Merge microdata.
-        for(let key in self.microdata) {
-
-          if( !obj.hasOwnProperty(key) ) obj[key] = self.microdata[key];
-          else {
-
-            if( $.isArray(obj[key]) ) {
-
-              if( $.isArray(self.microdata[key]) ) obj[key] = obj[key].concat(self.microdata[key]).unique();
-              else {
-
-                obj[key].push(self.microdata[key]);
-
-                obj[key] = obj[key].unique();
-
-              }
-
-            }
-
-            else if( obj[key] !== null && obj[key] instanceof Object ) {
-
-              if( self.microdata[key] !== null && self.microdata[key] instanceof Object ) {
-
-                obj[key] = $.extend(true, obj[key], self.microdata[key]);
-
-              }
-
-            }
-
-            else if( !obj[key] ) obj[key] = self.microdata[key];
-
-          }
-
-        }
-
-        data[i] = obj;
-
-      });
+      this.response = 0;
+      this.disabled = true;
 
       // Send tests.
-      $.post('php/emailer.php?action=test', {
-        template: self.template,
-        data: JSON.stringify(data)
-      }, 'json').done((response) => {
-        Events.$emit('results:incoming', response);
-        self.disabled = false;
-      }).fail((error) => console.log(error));
+      Batchailer.test(this.template, this.compiled)
+        .done((response) => Events.$emit('results:incoming', response))
+        .always(() => this.disabled = false);
 
     },
 
     email() {
-
-      // Capture self.
-      let self = this,
-          data = JSON.parse(self.data);
+      
+      // Reset errors.
+      Events.$emit('errors:reset');
 
       // Reset responses.
-      self.response = 0;
-      self.disabled = true;
-
-      // Merge data.
-      data.forEach(function(obj, i) {
-
-        // Merge recipient data.
-        if( obj.hasOwnProperty('receipts') ) {
-          if( !obj.receipts.hasOwnProperty('read') ) {
-
-            obj = $.extend(true, obj, {receipts: {read: self.read}});
-
-          }
-          if( !obj.receipts.hasOwnProperty('delivered') ) {
-
-            obj = $.extend(true, obj, {receipts: {delivered: self.delivered}});
-
-          }
-        }
-        else {
-          obj = $.extend(true, obj, {
-            receipts: {
-              read: self.read,
-              delivered: self.delivered
-            }
-          });
-        }
-
-        // Merge microdata.
-        for(let key in self.microdata) {
-
-          if( !obj.hasOwnProperty(key) ) obj[key] = self.microdata[key];
-          else {
-
-            if( $.isArray(obj[key]) ) {
-
-              if( $.isArray(self.microdata[key]) ) obj[key] = obj[key].concat(self.microdata[key]).unique();
-              else {
-
-                obj[key].push(self.microdata[key]);
-
-                obj[key] = obj[key].unique();
-
-              }
-
-            }
-
-            else if( obj[key] !== null && obj[key] instanceof Object ) {
-
-              if( self.microdata[key] !== null && self.microdata[key] instanceof Object ) {
-
-                obj[key] = $.extend(true, obj[key], self.microdata[key]);
-
-              }
-
-            }
-
-            else if( !obj[key] ) obj[key] = self.microdata[key];
-
-          }
-
-        }
-
-        data[i] = obj;
-
-      });
+      this.response = 0;
+      this.disabled = true;
 
       // Send emails.
-      $.post('php/emailer.php?action=email', {
-        template: self.template,
-        data: JSON.stringify(data)
-      }, 'json').done((response) => {
-        Events.$emit('results:incoming', response);
-        self.disabled = false;
-      }).fail((error) => console.log(error));
+      Batchailer.email(this.template, this.compiled)
+        .done((response) => Events.$emit('results:incoming', response))
+        .always(() => this.disabled = false);
 
+    },
+    
+    init( data ) {
+      
+      this[data.bind] = data.value;
+      
+      this.responses++;
+      
     }
 
   }, methods),
@@ -321,17 +235,77 @@ let Controller = Vue.component('controller', {
     let self = this;
 
     // Capture response data.
-    Events.$on('coder:response', (data) => {
-
-      self[data.bind] = data.value;
-
-      self.responses++;
-
-    });
+    Events.$on('coder:response', (data) => this.init(data));
 
     // Capture microdata.
-    Events.$on('microdata:change', (data) => { self.microdata = data; });
+    Events.$on('microdata:change', (data) => this.microdata = data);
 
+  },
+  
+  computed: {
+    
+    compiled() {
+      
+      // Parse data.
+      let data = JSON.parse(this.data);
+      
+      // Compile data.
+      data.map((email) => {
+        
+        // Merge receipt data.
+        if( email.hasOwnProperty('receipts') ) {
+          
+          // Set read and delivery receipts.
+          if( !email.receipts.hasOwnProperty('read') ) email = $.extend(true, email, {receipts: {read: this.read}});
+          if( !email.receipts.hasOwnProperty('delivered')) email = $.extend(true, email, {receipts: {delivered: this.delivered}});
+          
+        }
+        
+        // Otherwise, set receipt data.
+        else email = $.extend(true, email, {reciepts: {read: this.read, delivered: this.delivered}});
+        
+        // Merge microdata.
+        for( let key in this.microdata ) {
+          
+          // Set microdata.
+          if( !email.hasOwnProperty(key) ) email[key] = this.microdata[key];
+          
+          // Otherwise, merge microdata.
+          else {
+            
+            // Handle array data.
+            if( $.isArray(email[key]) ) {
+              
+              // Merge array data into the existing array.
+              if( $.isArray(this.microdata[key]) ) email[key] = email[key].concat(this.microdata[key]).unique();
+              
+              // Otherwise, append data onto the array.
+              else email[key] = email[key].concat([this.microdata[key]]).unique();
+              
+            }
+            
+            // Otherwise, handle object data.
+            else if( $.isObject(email[key]) ) {
+              
+              // Extend objects.
+              if( $.isObject(this.microdata[key]) ) email[key] = $.extend(true, email[key], this.microdata[key]);
+              
+            }
+            
+            // Otherwise, handle simple data.
+            else if( !email[key] ) email[key] = this.microdata[key];
+            
+          }
+          
+        }
+        
+      });
+      
+      // Return the compiled data.
+      return data;
+      
+    }
+    
   }
 
 });
@@ -351,20 +325,33 @@ let Previewer = Vue.component('previewer', {
 
   filters: $.extend({}, filters),
 
-  methods: $.extend({}, methods),
+  methods: $.extend({
+    
+    reset() {
+      
+      this.previews = [];
+      this.acount = 0;
+      this.active = 0;
+      
+    },
+    
+    preview( data ) {
+      
+      this.previews = data.previews;
+      this.count = data.previews.length;
+      this.active = 0;
+      
+    }
+    
+  }, methods),
 
   created() {
-
-    // Capture self.
-    let self = this;
+    
+    // Look for reset requests.
+    Events.$on('previewer:reset', () => this.reset());
 
     // Look for incoming preview requests.
-    Events.$on('previewer:incoming', (data) => {
-
-      self.previews = data.previews;
-      self.count = data.previews.length;
-
-    });
+    Events.$on('previewer:incoming', (data) => this.preview(data));
 
   }
 
@@ -394,8 +381,10 @@ let Results = Vue.component('results', {
 
   data() {
     return {
-      sent: 0,
-      failed: 0,
+      passed: [],
+      passing: 0,
+      failed: [],
+      failing: 0,
       results: []
     };
   },
@@ -403,65 +392,117 @@ let Results = Vue.component('results', {
   filters: $.extend({}, filters),
 
   methods: $.extend({
-
-    sentTo() {
-
-      return this.results.filter((result) => {
-        return result.success === true;
-      }).map((result) => {
-
-        let string = [];
-
-        result.to.forEach((to) => {
-
-          string.push( to.email + (to.name ? '(' + to.name + ')' : '') );
-
-        });
-
-        return string.join(', ');
-
-      });
-
-    },
-
-    failedTo() {
-
-      return this.results.filter((result) => {
-        return result.success === false;
-      }).map((result) => {
-
-        let string = [];
-
-        result.to.forEach((to) => {
-
-          string.push( to.email + (to.name ? '(' + to.name + ')' : '') );
-
-        });
-
-        return string.join(', ');
-
-      });
-
+    
+    save( data ) {
+      
+      // Save results.
+      this.passed = data.passed;
+      this.passing = data.passed.length || 0;
+      this.failed = data.failed;
+      this.failing = data.failed.length || 0;
+      this.results = data.results;
+      
+      // Check for errors.
+      if( data.error ) Events.$emit('errors:incoming', data.errors);
+      
     }
-
+    
   }, methods),
 
   created() {
 
-    // Capture self.
-    let self = this;
-
     // Generate feedback data.
-    Events.$on('results:incoming', (data) => {
+    Events.$on('results:incoming', (data) => this.save(data));
 
-      self.sent = data.sent;
-      self.failed = data.failed;
-      self.results = data.results;
+  },
+  
+  computed: {
+    
+    successful() {
+      
+      return this.results.filter((result) => result.success === true).map((result) => {
 
-    });
+        let string = [];
 
+        result.to.forEach((to) => {
+
+          string.push( to.email + (to.name ? ' (' + to.name + ')' : '') );
+
+        });
+
+        return string.join(', ');
+
+      });
+      
+    },
+    
+    unsuccessful() {
+    
+      return this.results.filter((result) => result.success === false).map((result) => {
+
+        let string = [];
+
+        result.to.forEach((to) => {
+
+          string.push( to.email + (to.name ? ' (' + to.name + ')' : '') );
+
+        });
+
+        return string.join(', ');
+
+      });
+      
+    }
+    
   }
 
+});
+
+// Errors
+let Errors = Vue.component('errors', {
+  
+  template: '#template-errors',
+  
+  data() {
+    return {
+      errors: []
+    };
+  },
+  
+  filters: $.extend({}, filters),
+  
+  methods: $.extend({
+    
+    log( errors ) {
+      
+      this.errors = errors;
+      
+    },
+    
+    reset() {
+      
+      this.errors = [];
+      
+    },
+    
+    dismiss( index ) {
+      
+      this.errors.splice(index, 1);
+      
+    }
+    
+  }, methods),
+  
+  created() {
+    
+    // Generate feedback data.
+    Events.$on('errors:incoming', (errors) => this.log(errors));
+    
+    // Reset feedback data.
+    Events.$on('errors:reset', () => this.reset());
+    
+  }
+  
 });
 
 // Coder
@@ -502,34 +543,28 @@ let Coder = Vue.component('coder', {
 
   mounted() {
 
-    let self = this;
+    // Set mode.
+    this.mode = this.modes[this.lang];
 
-    self.mode = self.modes[self.lang];
-
+    // Initialize scripts.
     let scripts = [];
 
-    self.scripts[self.lang].forEach((script) => {
+    // Load scripts.
+    this.scripts[this.lang].forEach((script) => scripts.push( $.getScript(`js/dependencies/codemirror/mode/${script}.js`) ));
 
-      scripts.push( $.getScript('js/dependencies/codemirror/mode/' + script + '.js') );
-
-    });
-
+    // Load code editors.
     $.when(...scripts).done(() => {
 
-      self.editor = CodeMirror.fromTextArea(self.$el, {
+      this.editor = CodeMirror.fromTextArea(this.$el, {
         lineNumbers: true,
         tabSize: 2,
-        mode: self.mode,
+        mode: this.mode,
         theme: 'dark'
       });
 
     });
 
-    Events.$on('coder:request', () => {
-
-      Events.$emit('coder:response', {bind: self.bind, value: self.editor.getValue()});
-
-    });
+    Events.$on('coder:request', () => Events.$emit('coder:response', {bind: this.bind, value: this.editor.getValue()}));
 
   }
 

@@ -1,0 +1,44 @@
+.error {
+  padding: 10px 45px 10px 10px;
+  border-width: 1px;
+  border-style: solid;
+  
+  @mixin colorize( $color ) {
+    background-color: tint($color, 90%);
+    color: $color;
+    border-color: $color;
+  }
+  
+  @include colorize( gray );
+  
+  @each $class, $color in map-get($colors, 'error') {
+    
+    &.#{$class} { @include colorize($color); }
+    
+  }
+  
+  .dismiss {
+    border: 0;
+    background: transparent;
+    display: block;
+    width:  25px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    opacity: .5;
+    color: inherit;
+    
+    &::before {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+    }
+    
+    &:hover, &:focus { opacity: 1; }
+    
+  }
+  
+}

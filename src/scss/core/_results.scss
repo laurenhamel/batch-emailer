@@ -28,8 +28,8 @@
     
     .metric { font-size: 1.5em; }
     
-    &.sent { grid-column: sent; grid-row: sent; }
-    &.failed { grid-column: failed; grid-row: failed; }
+    &.pass { grid-column: sent; grid-row: sent; }
+    &.fail { grid-column: failed; grid-row: failed; }
     &.total { grid-column: total; grid-row: total; }
     
   }
@@ -60,8 +60,8 @@
         
       }
       
-      &.sentto { background-color: rgba(darkgreen, .1); }
-      &.failedto { background-color: rgba(darkred, .1); }
+      &.pass { background-color: rgba(darkgreen, .1); }
+      &.fail { background-color: rgba(darkred, .1); }
       
     }
     

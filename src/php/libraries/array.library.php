@@ -27,4 +27,19 @@ function array_flatten( array $array, $prefix = '', $delimiter = '.' ) {
   
 }
 
+/**
+ * Determine whether an array is associative (containing non-interger keys)
+ */
+function is_associative_array( array $array ) {
+  
+  foreach( array_keys($array) as $key ) {
+    
+    if( is_string($key) ) return true;
+    
+  }
+  
+  return false;
+  
+}
+
 ?>

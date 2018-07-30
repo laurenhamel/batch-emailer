@@ -25,13 +25,13 @@ $template = $_POST['template'];
 $data = $_POST['data'];
 
 // Start batch emailer.
-$emailer = new BatchEmailer( $template, $data );
+$batchailer = new Batchailer( $template, $data );
 
 // Verify the action.
-if( method_exists($emailer, $action) ) {
+if( method_exists($batchailer, $action) ) {
 
   // Process the request.
-  $result = $emailer->$action();
+  $result = $batchailer->$action();
 
   // Return the result.
   echo json_encode($result);

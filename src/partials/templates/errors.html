@@ -1,0 +1,15 @@
+<template id="template-errors">
+
+  <div class="errors">
+    
+    <div v-for="(error, index) in errors" class="error danger">
+      
+      {{error.message}} for <code>Email #{{error.index + 1}}</code>.
+      
+      <button @click="dismiss(index)" class="dismiss fa-close"></button>
+    
+    </div>
+    
+  </div>
+
+</template>
