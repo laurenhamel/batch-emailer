@@ -58,7 +58,8 @@
     ],
     "js": [
       "<%= pkg.dependencies %>",
-      "codemirror/addon/overlay.js"
+      "codemirror/addon/overlay.js",
+      "codemirror/addon/runmode.js"
     ],
     "php": [
       "phpmailer/phpmailer",

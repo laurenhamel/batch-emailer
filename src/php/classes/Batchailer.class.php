@@ -56,8 +56,26 @@ class Batchailer {
   public function preview() {
 
     // Return previews.
-    return array_map(function($bound) { return $bound['template']; }, $this->bound);
+    return array_map(function($bound) { 
+      
+      return $bound['template']; 
+    
+    }, $this->bound);
 
+  }
+  
+  /**
+   * Enable batch merging.
+   */
+  public function merge() {
+    
+    // Return merged data.
+    return array_map(function($bound) {
+      
+      return $bound['template'];
+      
+    }, $this->bound);
+    
   }
   
   /**

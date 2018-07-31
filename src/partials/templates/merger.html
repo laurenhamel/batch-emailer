@@ -1,0 +1,34 @@
+<template id="template-merger">
+
+  <section id="merger" v-if="merges.length > 0">
+    
+    <div class="controls">
+      
+      <button class="button prev"
+              :disabled="active === 0"
+              @click="active--">
+        Previous
+      </button>
+      
+      <div class="ticker"><span>{{active + 1}}</span> <span>/</span> <span>{{count}}</span></div>
+
+      <button class="button next"
+              :disabled="active == count - 1"
+              @click="active++">
+        Next
+      </button>
+      
+    </div>
+    
+    <div class="window">
+  
+      <merge v-for="(merge, index) in merges" 
+               :merge="merge" 
+               :active="index == active"
+               :key="index"></merge>
+      
+    </div>
+    
+  </section>
+
+</template>

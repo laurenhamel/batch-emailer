@@ -1,0 +1,70 @@
+#merger {
+  
+  .controls {
+    display: grid;
+    grid-template-columns: 120px 100px 120px;
+    grid-template-rows: 50px;
+    grid-template-areas: "previous ticker next";
+    @include margin-y( 10px );
+    @include padding-x( 10px );
+    justify-content: center;
+    grid-gap: 10px;
+    
+    .prev { grid-column: previous; }
+    .ticker { grid-column: ticker; }
+    .next { grid-column: next; }
+    
+    .prev,
+    .ticker,
+    .next {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid black;
+    }
+    
+    .button {
+      
+      &:not([disabled]):hover,
+      &:not([disabled]):focus {
+        background-color: black;
+        color: white;
+      }
+      
+      &[disabled] { 
+        opacity: .25; 
+        background-color: black;
+        color: white;
+      }
+      
+    }
+    
+    .ticker {
+      font-size: 1.5em;
+      
+      span:first-child, span:last-child { font-size: 1.15em; }
+      span:first-child { font-weight: bold; }
+      span + span { margin-left: 5px; }
+      
+    }
+    
+  }
+  
+  .window {
+    margin: 10px;
+    border: 1px solid black;
+    height: calc(100% - (10px * 2));
+    
+    pre {
+      @include size( 100% ); 
+      border: 0; 
+      background-color: color('code', 'dark', 'background');
+      color: color('code', 'dark', 'default');
+      margin: 0;
+      padding: 10px;
+      font-size: .8em;
+    }
+    
+  }
+  
+}

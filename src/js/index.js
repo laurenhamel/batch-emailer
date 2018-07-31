@@ -75,6 +75,12 @@ let Batchailer = new Vue({
       
     },
     
+    merge( template, data ) {
+      
+      return this.request('MERGE', template, data);
+      
+    },
+    
     test( template, data ) {
       
       return this.request('TEST', template, JSON.stringify(data));
@@ -127,6 +133,7 @@ let Controller = Vue.component('controller', {
     return {
       actions: [
         'preview',
+        'merge',
         'test',
         'email'
       ],
@@ -185,6 +192,28 @@ let Controller = Vue.component('controller', {
         .done((previews) => Events.$emit('previewer:incoming', {previews}))
         .always(() => this.disabled = false);
 
+    },
+    
+    merge() {
+      
+      // Reset the previewer.
+      Events.$emit('previewer:reset');
+      
+      // Reset the merger.
+      Events.$emit('merger:reset');
+      
+      // Reset errors.
+      Events.$emit('errors:reset');
+      
+      // Reset response.
+      this.response = 0;
+      this.disabled = true;
+      
+      // Get merges.
+      Batchailer.merge(this.template, this.data)
+        .done((merges) => Events.$emit('merger:incoming', {merges}))
+        .always(() => this.disabled = false);
+      
     },
 
     test() {
@@ -330,7 +359,7 @@ let Previewer = Vue.component('previewer', {
     reset() {
       
       this.previews = [];
-      this.acount = 0;
+      this.count = 0;
       this.active = 0;
       
     },
@@ -338,7 +367,7 @@ let Previewer = Vue.component('previewer', {
     preview( data ) {
       
       this.previews = data.previews;
-      this.count = data.previews.length;
+      this.count = data.previews.length || 0;
       this.active = 0;
       
     }
@@ -357,6 +386,53 @@ let Previewer = Vue.component('previewer', {
 
 });
 
+// Merger
+let Merger = Vue.component('merger', {
+  
+  template: '#template-merger',
+  
+  data() {
+    return {
+      merges: [],
+      active: 0,
+      count: 0
+    };
+  },
+  
+  filters: $.extend({}, filters),
+  
+  methods: $.extend({
+    
+    reset() {
+      
+      this.merges = [];
+      this.count = 0;
+      this.active = 0;
+      
+    },
+    
+    merge( data ) {
+      
+      this.merges = data.merges;
+      this.count = data.merges.length || 0;
+      this.active = 0;
+      
+    }
+    
+  }, methods),
+  
+  created() {
+    
+    // Look for reset requests.
+    Events.$on('merger:reset', () => this.reset());
+    
+    // Look for incoming merge requests.
+    Events.$on('merger:incoming', (data) => this.merge(data));
+    
+  }
+  
+});
+
 // Preview
 let Preview = Vue.component('preview', {
 
@@ -371,6 +447,37 @@ let Preview = Vue.component('preview', {
   filters: $.extend({}, filters),
 
   methods: $.extend({}, methods)
+
+});
+
+// Merge
+let Merge = Vue.component('merge', {
+
+  template: '#template-merge',
+
+  props: ['merge', 'active'],
+
+  data() {
+    return {};
+  },
+
+  filters: $.extend({}, filters),
+
+  methods: $.extend({
+    
+    highlight() {
+      
+      CodeMirror.runMode(this.merge, 'text/html', this.$el);
+      
+    }
+    
+  }, methods),
+  
+  mounted() {
+    
+    if( this.active ) this.highlight();
+    
+  }
 
 });
 
