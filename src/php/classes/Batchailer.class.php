@@ -168,8 +168,8 @@ class Batchailer {
       // Otherwise, send the tests.
       foreach( $emails as $email ) { $result['results'][] = $email->send(); }
       
-      // Wait 1 second before moving on to the next batch.
-      sleep(1);
+      // Wait 2 second before moving on to the next batch.
+      sleep(2);
       
     }
 
@@ -261,8 +261,8 @@ class Batchailer {
       // Otherwise, send the emails.
       foreach( $emails as $email ) { $result['results'][] = $email->send(); }
       
-      // Wait 1 second before moving on to the next batch.
-      sleep(1);
+      // Wait 2 second before moving on to the next batch.
+      sleep(2);
       
     }
 
