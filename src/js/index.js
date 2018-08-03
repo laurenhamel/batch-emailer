@@ -89,7 +89,7 @@ let Batchailer = new Vue({
     
     email( template, data ) {
       
-      return this.request('EMAIL', template, data);
+      return this.request('EMAIL', template, JSON.stringify(data));
       
     }
     
@@ -500,7 +500,7 @@ let Results = Vue.component('results', {
 
   methods: $.extend({
     
-    save( data ) {
+    save( data ) { 
       
       // Save results.
       this.passed = data.passed;

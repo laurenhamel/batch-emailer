@@ -20,12 +20,8 @@ if( !isset($action) ) {
 
 }
 
-// Get the incoming request parameters.
-$template = $_POST['template'];
-$data = $_POST['data'];
-
 // Start batch emailer.
-$batchailer = new Batchailer( $template, $data );
+$batchailer = new Batchailer( $_POST['template'], $_POST['data'] );
 
 // Verify the action.
 if( method_exists($batchailer, $action) ) {

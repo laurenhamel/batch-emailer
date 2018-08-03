@@ -29,13 +29,13 @@ class Batchailer {
   /**
    * Bind the data to the template.
    */
-  private function bind() {
+  private function bind() { 
 
     // Initialize bindings.
     $bound = [];
 
     // Loop through the data.
-    foreach( $this->data as $data ) {
+    foreach( $this->data as $data ) { 
 
       // Render the template with the parameters.
       $bound[] = [
@@ -81,7 +81,7 @@ class Batchailer {
   /**
    * Enable batch testing.
    */
-  public function test() {
+  public function test() { 
     
     // Initialize result.
     $result = [
@@ -125,7 +125,7 @@ class Batchailer {
       foreach( $emails as $index => $email ) {
       
         // Try building the test email.
-        try {
+        try { 
 
           // Generate an email.
           $batches[$batch][$index] = new Email($email['template'], array_merge($email['data'], [
@@ -226,29 +226,29 @@ class Batchailer {
       // Prepare emails for sending.
       foreach( $emails as $index => $email ) {
       
-      // Try building the test email.
-      try {
+        // Try building the test email.
+        try {
 
-        // Generate an email.
-        $batches[$batch][$index] = new Email($email['template'], $email['data']);
-        
-      }
-      
-      // Catch errors.
-      catch( Exception $error ) {
-        
-        // Capture all errors.
-        $result['error'] = true;
-        $result['errors'][] = [
-          'message' => $error->getMessage(),
-          'data' => $email['data'],
-          'template' => $email['template'],
-          'index' => $email['index']
-        ];
-        
-      }
+          // Generate an email.
+          $batches[$batch][$index] = new Email($email['template'], $email['data']);
 
-    }
+        }
+
+        // Catch errors.
+        catch( Exception $error ) {
+
+          // Capture all errors.
+          $result['error'] = true;
+          $result['errors'][] = [
+            'message' => $error->getMessage(),
+            'data' => $email['data'],
+            'template' => $email['template'],
+            'index' => $email['index']
+          ];
+
+        }
+
+      }
       
     }
     
