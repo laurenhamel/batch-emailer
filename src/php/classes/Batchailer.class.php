@@ -18,7 +18,7 @@ class Batchailer {
 
     // Save inputs.
     $this->template = $template;
-    $this->data = json_decode($data, true);
+    $this->data = is_array($data) ? $data : json_decode($data, true);
     $this->renderer = new Mustache_Engine();
 
     // Bind data to templates.
